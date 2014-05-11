@@ -6,6 +6,10 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
+  # Create dirs:
+  FileUtils.mkdir 'config' if not File.exists? 'config'
+  FileUtils.mkdir 'logs' if not File.exists? 'logs'
+
   # Load settings
   settings = nil
   config_file = File.join('config','vagrant.yaml')
