@@ -6,6 +6,11 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
+  # Make sure we are at the root Vagrantfile directory path
+  while not File.exists? "Vagrantfile"
+    Dir.chdir '../'
+  end
+
   # Create dirs:
   FileUtils.mkdir 'config' if not File.exists? 'config'
   FileUtils.mkdir 'logs' if not File.exists? 'logs'
