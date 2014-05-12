@@ -2,10 +2,16 @@
 
 echo "INFO: Base bootstrap"
 
+if [[ -d /vagrant/logs/ ]];then 
+  LOG_FILE=/vagrant/logs/bootstrap.log
+else
+  LOG_FILE=/var/log/bootstrap.log
+fi
+
 # Script error handling and output redirect
 set -e                               # Fail on error
 set -o pipefail                      # Fail on pipes
-exec >> /vagrant/logs/output.log     # stdout to log file
+exec >> $LOG_FILE                    # stdout to log file
 exec 2>&1                            # stderr to log file
 set -x
 
@@ -45,6 +51,7 @@ apt-get -y install \
   puppet=$PUPPET_VERSION \
   puppet-common=$PUPPET_VERSION \
   libcurl4-gnutls-dev \
+  rubygems \
   git
 
 # Network configuration:

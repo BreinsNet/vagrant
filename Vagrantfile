@@ -47,6 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.customize ["modifyvm", :id, "--cpus", settings['provision']['virtualbox']['cpu']]
     end
   when 'digitalocean'
+    config.vm.synced_folder "vagrant", "/vagrant", disabled: true
     config.vm.hostname  = settings['fqdn'].split('.').first
     digitalocean = settings['provision']['digitalocean']
     config.vm.provider :digital_ocean do |provider, override|

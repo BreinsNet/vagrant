@@ -6,11 +6,18 @@ if [[ -z $1 ]];then
   exit 1
 fi
 
+if [[ -d /vagrant/logs/ ]];then
+  LOG_FILE=/vagrant/logs/bootstrap.log
+else
+  LOG_FILE=/var/log/bootstrap.log
+fi
+
+
 # Run puppet 
 case $1 in
   'apply')
     echo "INFO: Run puppet apply"
-    /vagrant/tools/run_puppet_apply.sh >> /vagrant/logs/output.log 2>&1
+    /vagrant/tools/run_puppet_apply.sh >> $LOG_FILE 2>&1
     ;;
   'agent')
     if [[ -z $2 ]];then
@@ -18,7 +25,7 @@ case $1 in
       exit 1
     fi
     echo "INFO: Run puppet agent"
-    /vagrant/tools/run_puppet_agent.sh $2 >> /vagrant/logs/output.log 2>&1
+    /vagrant/tools/run_puppet_agent.sh $2 >> $LOG_FILE 2>&1
     ;;
   *)
     echo 'Invalid option'
