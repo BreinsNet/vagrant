@@ -6,10 +6,10 @@ if [[ -z $1 ]];then
   exit 1
 fi
 
-if [[ -d /vagrant/logs/ ]];then
-  LOG_FILE=/vagrant/logs/bootstrap.log
-else
+if [[ $(id -u) -eq 0 ]];then
   LOG_FILE=/var/log/bootstrap.log
+else
+  LOG_FILE=/vagrant/logs/bootstrap.log
 fi
 
 

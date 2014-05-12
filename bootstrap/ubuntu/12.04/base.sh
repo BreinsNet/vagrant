@@ -2,10 +2,10 @@
 
 echo "INFO: Base bootstrap"
 
-if [[ -d /vagrant/logs/ ]];then 
-  LOG_FILE=/vagrant/logs/bootstrap.log
-else
+if [[ $(id -u) -eq 0 ]];then
   LOG_FILE=/var/log/bootstrap.log
+else
+  LOG_FILE=/vagrant/logs/bootstrap.log
 fi
 
 # Script error handling and output redirect
