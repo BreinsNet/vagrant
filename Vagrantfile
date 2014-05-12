@@ -100,10 +100,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # Deploy some script helpers
-  if settings['bootstrap']['deploy_tools']
-    config.vm.provision "shell" do |s|
-      s.path = File.join(common_script_path,'deploy_tools.sh')
-    end
+  config.vm.provision "shell" do |s|
+    s.path = File.join(common_script_path,'deploy_tools.sh')
   end
 
   # CLEAN UP bootsrap script
