@@ -35,3 +35,4 @@ build/
 .vagrant
 config
 logs
+manifests/default.pp
