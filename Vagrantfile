@@ -74,10 +74,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell" do |s|
     s.path = File.join(common_script_path,'puppet.sh')
     s.args = settings['puppet']['hiera_repo']
-  end if settings['puppet']['bootstrap']
+  end if settings['bootstrap']['puppet_masterless']
 
   # PUPPET apply run using run_puppet.sh wrapper
-  if settings['run_puppet_apply']
+  if settings['bootstrap']['puppet_run_apply']
 
     content = File.open('templates/default.pp').read
     content.gsub!(/SYSTEM_ROLE/,settings['puppet']['system_role'])
@@ -91,18 +91,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   end
 
+  # PUPPET agent run using run_puppet.sh wrapper
+  if settings['bootstrap']['puppet_run_agent']
+    config.vm.provision "shell" do |s|
+      s.path = File.join(common_script_path,'run_puppet.sh')
+      s.args = ['agent',settings['bootstrap']['puppet_server']]
+    end
+  end
+
   # Deploy some script helpers
   if settings['bootstrap']['deploy_tools']
     config.vm.provision "shell" do |s|
       s.path = File.join(common_script_path,'deploy_tools.sh')
-    end
-  end
-
-  # PUPPET agent run using run_puppet.sh wrapper
-  if settings['run_puppet_agent']
-    config.vm.provision "shell" do |s|
-      s.path = File.join(common_script_path,'run_puppet.sh')
-      s.args = ['agent',settings['puppet']['puppetmaster']]
     end
   end
 
