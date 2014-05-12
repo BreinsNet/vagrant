@@ -26,24 +26,43 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     puts e
     exit 1
   end
-  release_script_path = File.join('bootstrap',settings['distribution'],settings['release'])
+  release_script_path = File.join('bootstrap',settings['bootstrap']['distribution'],settings['bootstrap']['release'])
   common_script_path = File.join('bootstrap','common')
 
-  # Vagrant configuration
+  # General VM config
   config.vm.hostname  = settings['fqdn']
-  config.vm.box = settings['vagrant']['box']
-  config.vm.network "private_network", ip: settings['ipaddress']
-  config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
-  config.vm.network "forwarded_port", guest: 443, host: 8443, auto_correct: true
   config.ssh.forward_agent = true
 
-  # VM Configuration
-  config.vm.provider "virtualbox" do |v|
-    v.name = settings['fqdn']
-    v.customize ["modifyvm", :id, "--ioapic", "on"]
-    v.customize ["modifyvm", :id, "--memory", settings['vagrant']['memory']]
-    v.customize ["modifyvm", :id, "--cpus", settings['vagrant']['cpu']]
+  # Vagrant configuration
+  case settings['provision'].keys.first
+  when 'virtualbox'
+    config.vm.box = settings['provision']['virtualbox']['box']
+    config.vm.network "private_network", ip: settings['provision']['virtualbox']['ipaddress']
+    config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
+    config.vm.network "forwarded_port", guest: 443, host: 8443, auto_correct: true
+    config.vm.provider "virtualbox" do |v|
+      v.name = settings['fqdn']
+      v.customize ["modifyvm", :id, "--ioapic", "on"]
+      v.customize ["modifyvm", :id, "--memory", settings['provision']['virtualbox']['memory']]
+      v.customize ["modifyvm", :id, "--cpus", settings['provision']['virtualbox']['cpu']]
+    end
+  when 'digitalocean'
+    config.vm.hostname  = settings['fqdn'].split('.').first
+    digitalocean = settings['provision']['digitalocean']
+    config.vm.provider :digital_ocean do |provider, override|
+      override.vm.box = 'digital_ocean'
+      override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+      override.ssh.private_key_path = '~/.ssh/id_rsa'
+      provider.client_id = digitalocean['client_id']
+      provider.api_key = digitalocean['api_key']
+      provider.image = digitalocean['image']
+      provider.size = digitalocean['size']
+      provider.region = digitalocean['region']
+      provider.ssh_key_name = digitalocean['ssh_key_name']
+      provider.private_networking = digitalocean['private_networking']
+    end
   end
+
 
   # BASE bootsrap script
   config.vm.provision "shell" do |s|
@@ -73,7 +92,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # Deploy some script helpers
-  if settings['deploy_tools']
+  if settings['bootstrap']['deploy_tools']
     config.vm.provision "shell" do |s|
       s.path = File.join(common_script_path,'deploy_tools.sh')
     end
