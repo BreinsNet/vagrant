@@ -26,8 +26,8 @@ release_script_path = File.join('bootstrap',settings['bootstrap']['distribution'
 common_script_path = File.join('bootstrap','common')
 
 # Add the provisioner argument based con config file:
-if ARGV[0] == 'up' && ARGV[1].nil? && settings['provision'].keys.first != 'virtualbox'
-  ENV['VAGRANT_DEFAULT_PROVIDER'] = settings['provision'].keys.first
+if ARGV[0] == 'up' && ARGV[1].nil? && settings['bootstrap']['provider'] != 'virtualbox'
+  ENV['VAGRANT_DEFAULT_PROVIDER'] = settings['bootstrap']['provider']
 end
 
 VAGRANTFILE_API_VERSION = "2"
@@ -39,20 +39,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.forward_agent = true
 
   # Vagrant configuration
-  case settings['provision'].keys.first
+  case settings['bootstrap']['provider']
   when 'virtualbox'
-    config.vm.box = settings['provision']['virtualbox']['box']
-    config.vm.network "private_network", ip: settings['provision']['virtualbox']['ipaddress']
+    config.vm.box = settings['provider']['virtualbox']['box']
+    config.vm.network "private_network", ip: settings['provider']['virtualbox']['ipaddress']
     config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
     config.vm.network "forwarded_port", guest: 443, host: 8443, auto_correct: true
     config.vm.provider "virtualbox" do |v|
       v.name = settings['fqdn']
       v.customize ["modifyvm", :id, "--ioapic", "on"]
-      v.customize ["modifyvm", :id, "--memory", settings['provision']['virtualbox']['memory']]
-      v.customize ["modifyvm", :id, "--cpus", settings['provision']['virtualbox']['cpu']]
+      v.customize ["modifyvm", :id, "--memory", settings['provider']['virtualbox']['memory']]
+      v.customize ["modifyvm", :id, "--cpus", settings['provider']['virtualbox']['cpu']]
     end
   when 'digital_ocean'
-    digital_ocean = settings['provision']['digital_ocean']
+    digital_ocean = settings['provider']['digital_ocean']
     config.vm.provider :digital_ocean do |provider, override|
       override.vm.box = 'digital_ocean'
       override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
@@ -66,7 +66,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       provider.private_networking = digital_ocean['private_networking']
     end
   when 'aws'
-    aws = settings['provision']['aws']
+    aws = settings['provider']['aws']
     config.vm.provider :aws do |provider, override|
       provider.access_key_id = aws['access_key_id']
       provider.secret_access_key = aws['secret_access_key']
