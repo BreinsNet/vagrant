@@ -70,7 +70,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       provider.tags = config.vm.hostname.split('.').first
       provider.availability_zone = aws['availability_zone']
       provider.instance_type = aws['instance_type']
-      override.vm.box = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+      override.vm.box = "aws"
+      override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
       override.ssh.username = "ubuntu"
       override.ssh.private_key_path = '~/.ssh/id_rsa'
     end
