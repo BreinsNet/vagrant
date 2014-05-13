@@ -68,6 +68,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       provider.keypair_name = aws['keypair_name']
       provider.ami = aws['ami']
       provider.tags = config.vm.hostname.split('.').first
+      provider.region = aws['region']
       provider.availability_zone = aws['availability_zone']
       provider.instance_type = aws['instance_type']
       override.vm.box = "aws"
