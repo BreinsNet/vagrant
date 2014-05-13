@@ -30,7 +30,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   common_script_path = File.join('bootstrap','common')
 
   # General VM config
-  config.vm.hostname  = settings['fqdn']
+  config.vm.hostname  = settings['fqdn'].split('.').first
   config.ssh.forward_agent = true
 
   # Vagrant configuration
@@ -47,7 +47,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.customize ["modifyvm", :id, "--cpus", settings['provision']['virtualbox']['cpu']]
     end
   when 'digitalocean'
-    config.vm.hostname  = settings['fqdn'].split('.').first
     digitalocean = settings['provision']['digitalocean']
     config.vm.provider :digital_ocean do |provider, override|
       override.vm.box = 'digital_ocean'
@@ -61,6 +60,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       provider.ssh_key_name = digitalocean['ssh_key_name']
       provider.private_networking = digitalocean['private_networking']
     end
+  when 'aws'
+    aws = settings['provision']['aws']
+    config.vm.provider :aws do |provider, override|
+      provider.access_key_id = aws['access_key_id']
+      provider.secret_access_key = aws['secret_access_key']
+      provider.keypair_name = aws['keypair_name']
+      provider.ami = aws['ami']
+      provider.tags = config.vm.hostname.split('.').first
+      provider.availability_zone = aws['availability_zone']
+      provider.instance_type = aws['instance_type']
+      override.vm.box = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+      override.ssh.username = "ubuntu"
+      override.ssh.private_key_path = '~/.ssh/id_rsa'
+    end
   end
 
 
@@ -68,7 +81,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell" do |s|
     s.path = File.join(release_script_path,'base.sh')
     s.args = settings['puppet']['version'] + ' ' + settings['fqdn']
-  end
+  end if settings['bootstrap']['base']
 
   # PUPPET Bootstrap script:
   config.vm.provision "shell" do |s|
