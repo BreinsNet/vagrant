@@ -2,32 +2,37 @@
 # vi: set ft=ruby :
 require 'pp'
 
+# Make sure we are at the root Vagrantfile directory path
+while not File.exists? "Vagrantfile"
+  Dir.chdir '../'
+end
+
+# Create dirs:
+FileUtils.mkdir 'config' if not File.exists? 'config'
+FileUtils.mkdir 'logs' if not File.exists? 'logs'
+
+# Load settings
+settings = nil
+config_file = File.join('config','vagrant.yaml')
+begin
+  raise "vagrant.yaml not exists" if not File.exists? config_file
+  settings = YAML::load(File.open(config_file).read)
+rescue => e
+  puts "error: Could not load settings"
+  puts e
+  exit 1
+end
+release_script_path = File.join('bootstrap',settings['bootstrap']['distribution'],settings['bootstrap']['release'])
+common_script_path = File.join('bootstrap','common')
+
+# Add the provisioner argument based con config file:
+if ARGV[0] == 'up' && ARGV[1].nil? && settings['provision'].keys.first != 'virtualbox'
+  ENV['VAGRANT_DEFAULT_PROVIDER'] = settings['provision'].keys.first
+end
+
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
-  # Make sure we are at the root Vagrantfile directory path
-  while not File.exists? "Vagrantfile"
-    Dir.chdir '../'
-  end
-
-  # Create dirs:
-  FileUtils.mkdir 'config' if not File.exists? 'config'
-  FileUtils.mkdir 'logs' if not File.exists? 'logs'
-
-  # Load settings
-  settings = nil
-  config_file = File.join('config','vagrant.yaml')
-  begin
-    raise "vagrant.yaml not exists" if not File.exists? config_file
-    settings = YAML::load(File.open(config_file).read)
-  rescue => e
-    puts "error: Could not load settings"
-    puts e
-    exit 1
-  end
-  release_script_path = File.join('bootstrap',settings['bootstrap']['distribution'],settings['bootstrap']['release'])
-  common_script_path = File.join('bootstrap','common')
 
   # General VM config
   config.vm.hostname  = settings['fqdn'].split('.').first
@@ -46,19 +51,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.customize ["modifyvm", :id, "--memory", settings['provision']['virtualbox']['memory']]
       v.customize ["modifyvm", :id, "--cpus", settings['provision']['virtualbox']['cpu']]
     end
-  when 'digitalocean'
-    digitalocean = settings['provision']['digitalocean']
+  when 'digital_ocean'
+    digital_ocean = settings['provision']['digital_ocean']
     config.vm.provider :digital_ocean do |provider, override|
       override.vm.box = 'digital_ocean'
       override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
       override.ssh.private_key_path = '~/.ssh/id_rsa'
-      provider.client_id = digitalocean['client_id']
-      provider.api_key = digitalocean['api_key']
-      provider.image = digitalocean['image']
-      provider.size = digitalocean['size']
-      provider.region = digitalocean['region']
-      provider.ssh_key_name = digitalocean['ssh_key_name']
-      provider.private_networking = digitalocean['private_networking']
+      provider.client_id = digital_ocean['client_id']
+      provider.api_key = digital_ocean['api_key']
+      provider.image = digital_ocean['image']
+      provider.size = digital_ocean['size']
+      provider.region = digital_ocean['region']
+      provider.ssh_key_name = digital_ocean['ssh_key_name']
+      provider.private_networking = digital_ocean['private_networking']
     end
   when 'aws'
     aws = settings['provision']['aws']
