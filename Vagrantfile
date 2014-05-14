@@ -94,10 +94,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell" do |s|
     s.path = File.join(common_script_path,'puppet.sh')
     s.args = settings['puppet']['hiera_repo']
-  end if settings['bootstrap']['puppet_masterless']
+  end if settings['puppet']['masterless']
 
   # PUPPET apply run using run_puppet.sh wrapper
-  if settings['bootstrap']['puppet_run_apply']
+  if settings['puppet']['masterless']
     content = File.open('templates/default.pp').read
     content.gsub!(/SYSTEM_ROLE/,settings['puppet']['system_role'])
     content.gsub!(/SYSTEM_ENV/,settings['puppet']['system_env'])
@@ -109,10 +109,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # PUPPET agent run using run_puppet.sh wrapper
-  if settings['bootstrap']['puppet_run_agent']
+  if ! settings['puppet']['masterless']
     config.vm.provision "shell" do |s|
       s.path = File.join(common_script_path,'run_puppet.sh')
-      s.args = ['agent',settings['bootstrap']['puppet_server']]
+      s.args = ['agent',settings['puppet']['server']]
     end
   end
 
