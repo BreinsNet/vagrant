@@ -9,4 +9,5 @@ puppet apply \
   --detailed-exitcodes \
   --modulepath=/etc/puppet/environments/production/modules:/etc/puppet/environments/production/custom \
   --hiera_config=/etc/puppet/hiera.yaml \
+  $* \
   /vagrant/manifests/default.pp
