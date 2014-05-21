@@ -24,7 +24,7 @@ set -x
 
 puppet agent -t --server $1 $ENVIRONMENT
 
-if [[ $? -ne 4 ]]; then
+if [[ $? -ne 2 ]]; then
   exit 1
 else
   exit 0

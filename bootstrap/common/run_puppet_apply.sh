@@ -31,7 +31,7 @@ puppet apply \
   --hiera_config=/etc/puppet/hiera.yaml \
   /vagrant/manifests/default.pp
 
-if [[ $? -ne 4 ]]; then
+if [[ $? -ne 2 ]]; then
   exit 1
 else
   exit 0
