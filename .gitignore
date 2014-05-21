@@ -36,3 +36,4 @@ build/
 config
 logs
 manifests/default.pp
+*swp

@@ -107,16 +107,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     content.gsub!(/SYSTEM_ENV/,settings['puppet']['system_env'])
     File.open('manifests/default.pp','w').puts content
     config.vm.provision "shell" do |s|
-      s.path = File.join(common_script_path,'run_puppet.sh')
-      s.args = 'apply'
+      s.path = File.join(common_script_path,'run_puppet_apply.sh')
+      s.args = settings['puppet']['environment']
     end
   end
 
   # PUPPET agent run using run_puppet.sh wrapper
   if ! settings['puppet']['masterless']
     config.vm.provision "shell" do |s|
-      s.path = File.join(common_script_path,'run_puppet.sh')
-      s.args = ['agent',settings['puppet']['server']]
+      s.path = File.join(common_script_path,'run_puppet_agent.sh')
+      s.args = [settings['puppet']['server'],settings['puppet']['environment']]
     end
   end
 
