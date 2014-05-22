@@ -23,6 +23,7 @@ fi
 
 PUPPET_VERSION=$1
 FQDN=$2
+HOSTNAME=$(echo $FQDN|cut -d'.' -f1)
 
 # Workaround for sudo to work with ssh forward agent, only needed in vagrant:
 echo "Defaults    env_keep += \"SSH_AUTH_SOCK\"" > /etc/sudoers.d/root_ssh_agent
@@ -55,7 +56,7 @@ apt-get -y install \
   git
 
 # Network configuration:
-hostname ${FQDN}
+hostname ${HOSTNAME}
 
 cat << EOF > /etc/hosts
 127.0.0.1    localhost.localdomain   localhost
