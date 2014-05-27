@@ -11,7 +11,7 @@ end
 FileUtils.mkdir 'config' if not File.exists? 'config'
 FileUtils.mkdir 'logs' if not File.exists? 'logs'
 FileUtils.mkdir 'manifests' if not File.exists? 'manifests'
-FileUtils.mkdir 'manifests/default.pp' if not File.exists? 'manifests/default.pp'
+FileUtils.touch 'manifests/default.pp' if not File.exists? 'manifests/default.pp'
 
 # Load settings
 settings = nil
