@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -z $1 ]; then
-  echo usage: $0 [environment]
+  echo usage: $0 [environment] [disable_log]
   exit 1
 fi
 
@@ -13,10 +13,14 @@ else
   LOG_FILE=/vagrant/logs/bootstrap.log
 fi
 
-# Script error handling and output redirect
-exec >> $LOG_FILE                    # stdout to log file
-exec 2>&1                            # stderr to log file
-set -x
+if [[ -z $2 ]]; then
+
+  # Script error handling and output redirect
+  exec >> $LOG_FILE                    # stdout to log file
+  exec 2>&1                            # stderr to log file
+  set -x
+
+fi
 
 if which rvm > /dev/null 2>&1; then
   source /etc/profile.d/rvm.sh
