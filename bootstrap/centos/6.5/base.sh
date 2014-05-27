@@ -44,6 +44,7 @@ yum install -y -q \
 yum install -y -q \
   puppet-$PUPPET_VERSION \
   ruby-devel \
+  rubygems \
   libcurl-devel
 
 # Network configuration:
