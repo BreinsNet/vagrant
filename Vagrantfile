@@ -131,5 +131,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     s.args = settings['puppet']['version']
   end
 
+  # Remove all the vagrant files unless if virtualbox:
+  config.vm.provision 'shell' do |s|
+    s.inline = 'cp /vagrant/bootstrap/common/run_puppet_apply.sh /usr/bin'
+  end if settings['puppet']['masterless']
+
+  # Remove all the vagrant files unless if virtualbox:
+  config.vm.provision 'shell' do |s|
+    s.inline = 'rm -rf /vagrant'
+  end unless settings['bootstrap']['provider'] == 'virtualbox'
+
 end
 
