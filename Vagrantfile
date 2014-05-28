@@ -120,18 +120,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  # Deploy some script helpers
-  config.vm.provision "shell" do |s|
-    s.path = File.join(common_script_path,'deploy_tools.sh')
-  end
-
   # CLEAN UP bootsrap script
   config.vm.provision "shell" do |s|
     s.path = File.join(release_script_path,'cleanup.sh')
     s.args = settings['puppet']['version']
   end
 
-  # Remove all the vagrant files unless if virtualbox:
+  # Copy run_puppet_apply.sh so it can be run later on
   config.vm.provision 'shell' do |s|
     s.inline = 'cp /vagrant/bootstrap/common/run_puppet_apply.sh /usr/bin'
   end if settings['puppet']['masterless']
