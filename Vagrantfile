@@ -44,6 +44,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   case settings['bootstrap']['provider']
   when 'virtualbox'
     config.vm.box = settings['provider']['virtualbox']['box']
+    config.vm.box_url = settings['provider']['virtualbox']['box_url']
     config.vm.network "private_network", ip: settings['provider']['virtualbox']['ipaddress']
     config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
     config.vm.network "forwarded_port", guest: 443, host: 8443, auto_correct: true
