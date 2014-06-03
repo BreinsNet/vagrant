@@ -88,6 +88,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
+# Custom log action
+
+if ARGV[0] == 'log'
+  if system "vagrant ssh -c 'test -f /var/log/bootstrap.log'"
+    system "vagrant ssh -c 'tail -f /var/log/bootstrap.log'"
+    exit 0
+  else
+    puts "Bootprcess hasn't started yet"
+    exit 0
+  end
+end
 
   # BASE bootsrap script
   config.vm.provision "shell" do |s|
