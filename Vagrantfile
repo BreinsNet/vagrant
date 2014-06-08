@@ -95,6 +95,7 @@ if ARGV[0] == 'log'
     sleep(1)
   end
   system "vagrant ssh -c 'tail -f /var/log/bootstrap.log'"
+  exit 0
 end
 
   # BASE bootsrap script
