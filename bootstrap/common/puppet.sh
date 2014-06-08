@@ -29,7 +29,7 @@ gem install \
  deep_merge
 
 # Deploy hiera data
-[[ ! -d /etc/puppet/hieradata.git ]] && git clone $1 /etc/puppet/hieradata 
+[[ ! -d /etc/puppet/hieradata/.git ]] && git clone $1 /etc/puppet/hieradata 
 cd /etc/puppet/hieradata && git pull
 
 # Create necessary links:
