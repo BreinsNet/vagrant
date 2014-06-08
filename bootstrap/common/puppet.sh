@@ -21,12 +21,11 @@ if [[ -z $1 ]];then
   exit 1
 fi
 
+GEM_LIST="curb r10k system_timer deep_merge"
 # Install dpendency gems
-gem install \
- curb \
- r10k \
- system_timer \
- deep_merge
+if [[ $(gem list|grep -E "$(echo $GEM_LIST|sed s/\ /\|/g)"|wc -l) -ne $(echo $GEM_LIST|wc -w) ]] ; then
+  gem install $GEM_LIST
+fi
 
 # Deploy hiera data
 [[ ! -d /etc/puppet/hieradata/.git ]] && git clone $1 /etc/puppet/hieradata 
