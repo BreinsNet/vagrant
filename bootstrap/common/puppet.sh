@@ -21,7 +21,7 @@ if [[ -z $1 ]];then
   exit 1
 fi
 
-GEM_LIST="curb r10k system_timer deep_merge"
+GEM_LIST="curb r10k deep_merge"
 # Install dpendency gems
 if [[ $(gem list|grep -E "$(echo $GEM_LIST|sed s/\ /\|/g)"|wc -l) -ne $(echo $GEM_LIST|wc -w) ]] ; then
   gem install $GEM_LIST
