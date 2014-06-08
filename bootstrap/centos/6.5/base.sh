@@ -21,8 +21,14 @@ if [[ -z $1 ]] || [[ -z $2 ]];then
   exit 1
 fi
 
+
 PUPPET_VERSION=$1
 FQDN=$2
+
+# Check if this has already been provisioned:
+if rpm -qi puppet-$PUPPET_VERSION; then 
+  exit 0
+fi
 
 # Workaround for sudo to work with ssh forward agent, only needed in vagrant:
 echo "Defaults    env_keep += \"SSH_AUTH_SOCK\"" > /etc/sudoers.d/root_ssh_agent
