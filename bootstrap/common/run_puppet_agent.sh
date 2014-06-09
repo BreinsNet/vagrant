@@ -24,9 +24,11 @@ set -x
 
 puppet agent -t --server $1 $ENVIRONMENT
 
-if [[ $? -ne 2 ]]; then
-  exit 1
-else
+
+RET=$?
+if [ $RET -eq 2 ] || [ $RET -eq 0 ] ; then
   exit 0
+else
+  exit 1
 fi
 
