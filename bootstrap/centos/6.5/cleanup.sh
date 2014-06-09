@@ -17,6 +17,6 @@ set -x
 
 # Clean up puppetlabs packages 
 # through the normal apt-get upgrade path
-if rpm -qi puppetlabs-release
+if rpm -qi puppetlabs-release; then 
   rpm -e puppetlabs-release
 fi
