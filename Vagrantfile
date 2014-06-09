@@ -91,7 +91,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 # Custom log action
 
 if ARGV[0] == 'log'
-  while not %x[vagrant ssh -c 'test -f /var/log/bootstrap.log' > /dev/null 2>&1]
+  while not system "vagrant ssh -c 'test -f /var/log/bootstrap.log' > /dev/null 2>&1"
     sleep(1)
   end
   system "vagrant ssh -c 'tail -f /var/log/bootstrap.log'"
