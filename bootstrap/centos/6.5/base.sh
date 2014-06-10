@@ -25,6 +25,10 @@ fi
 PUPPET_VERSION=$1
 FQDN=$2
 
+# Disable selinux:
+sed -ri s/^SELINUX=.*/SELINUX=disabled/g /etc/sysconfig/selinux 
+setenforce 0
+
 # Check if this has already been provisioned:
 if rpm -qi puppet-$PUPPET_VERSION; then 
   exit 0
