@@ -52,6 +52,7 @@ yum install -y -q \
   ruby-devel \
   rubygems \
   libcurl-devel \
+  git \
   gcc
 
 # Network configuration:
