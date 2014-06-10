@@ -51,7 +51,8 @@ yum install -y -q \
   puppet-$PUPPET_VERSION \
   ruby-devel \
   rubygems \
-  libcurl-devel
+  libcurl-devel \
+  gcc
 
 # Network configuration:
 hostname ${FQDN}
