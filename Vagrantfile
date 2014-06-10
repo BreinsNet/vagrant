@@ -85,7 +85,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
       override.ssh.username = aws['username']
       override.ssh.private_key_path = aws['private_key_path']
-      override.ssh.pty = true
     end
   end
 
