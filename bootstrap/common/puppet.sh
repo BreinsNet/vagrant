@@ -24,7 +24,7 @@ fi
 GEM_LIST="curb r10k deep_merge encryptor"
 # Install dpendency gems
 if [[ $(gem list|grep -E "$(echo $GEM_LIST|sed s/\ /\|/g)"|wc -l) -ne $(echo $GEM_LIST|wc -w) ]] ; then
-  gem install $GEM_LIST
+  gem install --no-ri --no-rdoc $GEM_LIST
 fi
 
 # Deploy hiera data
