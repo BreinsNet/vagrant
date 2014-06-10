@@ -83,7 +83,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       provider.block_device_mapping = [ { :DeviceName => "/dev/sda", 'Ebs.VolumeSize' => aws['ebs_size'] } ]
       override.vm.box = "aws"
       override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-      override.ssh.username = "ubuntu"
+      override.ssh.username = aws['username']
       override.ssh.private_key_path = aws['private_key_path']
     end
   end
