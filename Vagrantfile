@@ -1,6 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 require 'pp'
+require 'yaml'
 
 # Make sure we are at the root Vagrantfile directory path
 while not File.exists? "Vagrantfile"
