@@ -34,8 +34,20 @@ if ARGV[0] == 'up' && ARGV[1].nil? && settings['bootstrap']['provider'] != 'virt
 end
 
 # Check ssh-agent
-if ENV['SSH_AUTH_SOCK'].nil? 
-  puts "Error: ssh-agent has to be available" 
+if ENV['SSH_AUTH_SOCK'].nil?
+  puts "
+ERROR: ssh-agent is not available
+
+To start ssh-agent do
+
+$ . <(ssh-agent)
+$ ssh-add
+
+and to stop it do
+
+$ ssh-agent -k
+
+"
   exit 1
 end
 
