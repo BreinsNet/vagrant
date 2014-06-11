@@ -32,6 +32,12 @@ if ARGV[0] == 'up' && ARGV[1].nil? && settings['bootstrap']['provider'] != 'virt
   ENV['VAGRANT_DEFAULT_PROVIDER'] = settings['bootstrap']['provider']
 end
 
+# Check ssh-agent
+if ENV['SSH_AUTH_SOCK'].nil? 
+  puts "Error: ssh-agent has to be available" 
+  exit 1
+end
+
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -87,16 +93,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       override.ssh.private_key_path = aws['private_key_path']
     end
   end
-
-# Custom log action
-
-if ARGV[0] == 'log'
-  while not system "vagrant ssh -c 'test -f /var/log/bootstrap.log' > /dev/null 2>&1"
-    sleep(1)
-  end
-  system "vagrant ssh -c 'tail -f /var/log/bootstrap.log'"
-  exit 0
-end
 
   # BASE bootsrap script
   config.vm.provision "shell" do |s|
