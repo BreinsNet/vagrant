@@ -25,6 +25,11 @@ PUPPET_VERSION=$1
 FQDN=$2
 HOSTNAME=$(echo $FQDN|cut -d'.' -f1)
 
+# Check if this has already been provisioned:
+if dpkg -l puppet|grep $PUPPET_VERSION; then 
+  exit 0
+fi
+
 # Workaround for sudo to work with ssh forward agent, only needed in vagrant:
 echo "Defaults    env_keep += \"SSH_AUTH_SOCK\"" > /etc/sudoers.d/root_ssh_agent
 chmod 0440 /etc/sudoers.d/root_ssh_agent
