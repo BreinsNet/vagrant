@@ -21,6 +21,11 @@ if [[ -z $1 ]];then
   exit 1
 fi
 
+# Switch rvm system
+if which rvm; then 
+  rvm use system
+fi
+
 GEM_LIST="curb r10k deep_merge hiera-eyaml"
 # Install dpendency gems
 if [[ $(gem list|grep -E "$(echo $GEM_LIST|sed s/\ /\|/g)"|wc -l) -ne $(echo $GEM_LIST|wc -w) ]] ; then

@@ -17,5 +17,7 @@ set -x
 
 # Clean up puppetlabs packages 
 # through the normal apt-get upgrade path
-apt-get purge -y puppetlabs-release
-apt-get clean && apt-get update
+if dpkg -l puppetlabs-release; then
+  apt-get purge -y puppetlabs-release
+  apt-get clean && apt-get update
+fi
