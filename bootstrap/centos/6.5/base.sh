@@ -76,5 +76,10 @@ HOSTNAME=${FQDN}
 
 EOF
 
+# For some reason sometimes postfix is up but the service doesn't
+# Detect it. So here we kill it. Puppet will later on start it
+# again:
+ps -fe|grep postfix |grep -v grep|awk '{print $2}'|xargs kill
+
 iptables -F
 
